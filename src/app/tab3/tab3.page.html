@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 3
+      Sigma Calculator
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,42 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
+      <ion-title size="large">Sigma Calculator</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <ion-grid>
+    <form #form="ngForm" (ngSubmit)="submitForm(form)">
+    <ion-row size="12">
+      <ion-col size="2" offset="1">
+          <ion-input name="i" ngModel class="ion-input-top form-control" type="number" label="i = " labelPlacement="floating" required></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="2" offset="1">
+        <ion-text class="sigma">Σ</ion-text>
+      </ion-col>
+      <ion-col class="equation-input" size="7" offset="1">
+        <ion-input name="equation" class="form-control" ngModel label="Enter Equation Here" labelPlacement="floating" required></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="2" offset="1">
+          <ion-input name="n" ngModel class="ion-input-bottom form-control" type="number" label="n = " labelPlacement="floating" required></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col size="10" offset="1">
+        <ion-button type="submit">Calculate!</ion-button>
+        <ion-button type="button" (click) = "save()">Save Equation</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row size="12">
+      <ion-col class="answer" size="10" offset="1">
+        <ion-text *ngIf="!answer">Cannot Compute Answer! Please check your equation for errors.</ion-text>
+        <ion-text *ngIf="answer">Answer: {{answer}}</ion-text>
+      </ion-col>
+    </ion-row>
+  </form>
+  </ion-grid>
 </ion-content>
