@@ -36,13 +36,14 @@
     <ion-row size="12">
       <ion-col size="10" offset="1">
         <ion-button type="submit">Calculate!</ion-button>
-        <ion-button type="button" (click) = "save()">Save Equation</ion-button>
+        <ion-button type="button" class="button-outline" (click)="clearInput()">Clear</ion-button>
       </ion-col>
     </ion-row>
     <ion-row size="12">
       <ion-col class="answer" size="10" offset="1">
-        <ion-text *ngIf="!answer">Cannot Compute Answer! Please check your equation for errors.</ion-text>
-        <ion-text *ngIf="answer">Answer: {{answer}}</ion-text>
+        <ion-text *ngIf="formIsEmpty"></ion-text>
+        <ion-text *ngIf="!answer && !formIsEmpty">Cannot Compute Answer! Please check your equation for errors.</ion-text>
+        <ion-text *ngIf="answer && !formIsEmpty">Answer: {{answer}}</ion-text>
       </ion-col>
     </ion-row>
   </form>

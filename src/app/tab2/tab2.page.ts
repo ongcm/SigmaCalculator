@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ServicesService } from '../services/services.service';
 import { Router } from '@angular/router';
 
@@ -9,21 +9,21 @@ import { Router } from '@angular/router';
 })
 export class Tab2Page implements OnInit{
 
-  savedEquations!: Array<string>;
+  savedEquations!: any[];
 
-  constructor(private service: ServicesService, private router: Router) {}
+  constructor(private router: Router, private service: ServicesService) {}
 
-  ngOnInit(): void {
-    this.savedEquations = this.service.listSavedEquations;
+  async ngOnInit() {
+    this.savedEquations = this.service.updateEquationsList()
   }
 
-  deleteItem(e: string){
-    this.savedEquations = this.service.deleteEquation(e);
-  }
-
-  loadEquation(e: string){
+  loadEquation(e: String){
     this.service.returnToEquation(e);
-    this.router.navigate(["/tabs", "tab1"])
+    this.router.navigate(["/tabs", "tab1"]);
+  }
+
+  deleteItem(id: number){
+    this.savedEquations = this.service.deleteItem(id);
   }
 
 }

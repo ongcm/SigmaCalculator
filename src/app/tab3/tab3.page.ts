@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ServicesService } from '../services/services.service';
 import { NgForm, NonNullableFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { timeInterval } from 'rxjs';
 
 @Component({
   selector: 'app-tab3',
@@ -17,6 +18,8 @@ export class Tab3Page implements OnInit{
   i!: number;
   equation!: string;
 
+  formIsEmpty!: boolean;
+
   @ViewChild('form', {static: false}) form!: NgForm;
 
   constructor(private computeService: ServicesService, private router: Router) {
@@ -24,7 +27,11 @@ export class Tab3Page implements OnInit{
   }
 
   ngOnInit(): void {
+    this.formIsEmpty = true;
     this.answer = this.computeService.answer;
+    this.computeService.calculatedNumber.subscribe(result=>{
+      this.equation = result
+    })
   }
 
   submitForm(form: NgForm){
@@ -37,6 +44,9 @@ export class Tab3Page implements OnInit{
   }
 
   computeEquation(){
+
+    this.formIsEmpty = false;
+
     this.computeService.currentEquation = this.equation.split("")
 
     let finalAnswer = 0;
@@ -56,13 +66,9 @@ export class Tab3Page implements OnInit{
     return finalAnswer;
   }
 
-  save(){
-    this.answer = this.computeEquation();
-    let equationToSave = this.equation.split(" ").join(" ")+` from ${this.i} to ${this.n} = ${this.answer}`;
-    this.computeService.saveEquation(equationToSave)
-    this.computeService.currentEquation = [];
-    this.answer = undefined;
-    this.router.navigate(["/tabs", "tab2"])
+  clearInput(){
+    this.formIsEmpty = true;
+    this.form.reset();
   }
 
 }

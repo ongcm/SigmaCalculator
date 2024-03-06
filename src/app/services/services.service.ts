@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ServicesService {
+export class ServicesService{
 
-  listSavedEquations: Array<string> = []
+  listSavedEquations: String[] = [];
 
   answer!: Number | undefined;
 
@@ -14,26 +15,38 @@ export class ServicesService {
   calculatedNumber: Subject<string> = new Subject<string>();
   calculatedResult: string = "0";
 
-  saveEquation(equation: string){
-    this.listSavedEquations.push(equation)
+  constructor(private storage: Storage){}
+
+  updateEquationsList(){
+
+    this.storage['forEach']((key: any, value: String, index: any) => {
+      if (!this.listSavedEquations.includes(key))
+        this.listSavedEquations.push(key);
+    });
+
+    return this.listSavedEquations;
+
   }
 
-  deleteEquation(equation: string){
-    for (let i = 0; i < this.listSavedEquations.length; i++) {
-      if (this.listSavedEquations[i] == equation) {
-        this.listSavedEquations.splice(i, 1);
-      }
-    }
+  async saveEquation(equation: String){
+    const length = (await this.storage.length()).toString()
+
+    this.storage.set(length, equation.toString())
+    this.listSavedEquations = this.updateEquationsList();
+    this.listSavedEquations.push(equation);
+  }
+
+  deleteItem(id: number){
+    this.storage.remove(id.toString())
+    this.listSavedEquations.splice(id, 1)
     return this.listSavedEquations
   }
 
-  returnToEquation(fullEquation: string){
+  returnToEquation(fullEquation: String){
     const equation = fullEquation.split("=")
     this.currentEquation = equation[0].split("");
     this.calculatedNumber.next(equation[1]);
   }
-
-  constructor() { }
 
   add(num1: number, num2: number){
     return num1+num2;
@@ -47,11 +60,13 @@ export class ServicesService {
     return num1*num2;
   }
 
-  divide(num1: number, num2: number){
+  divide(num1: number, num2: number): number | string{
+
     if (num2==0){
       return "Error!"
     }
-    return num1/num2;
+  
+    return (num1/num2).toString().slice(0, 7);
   }
 
   convertToNegativeOrPositive(num1: number){
@@ -105,7 +120,7 @@ export class ServicesService {
       }
     }
 
-    nums = this.currentEquation.join(",").split("+").join("|").split("-").join("|").split("*").join("|").split("/").join("").replace(",", "").split("|");
+    nums = this.currentEquation.join(",").split("+").join("|").split("-").join("|").split("*").join("|").split("/").join("|").replace(",", "").split("|");
       
     for (let i = 0; i<nums.length; i++){
       calculateIndividualNumbers.push(nums[i].split(",").join("").split(" ").join(""));

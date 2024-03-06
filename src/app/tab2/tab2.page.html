@@ -13,15 +13,14 @@
     </ion-toolbar>
   </ion-header>
 
-  <h1 *ngIf="savedEquations.length==0" class="ion-padding">No Equations Saved!</h1>
-
-  <ion-list *ngFor="let e of savedEquations">
+  <h1 *ngIf="savedEquations.length==0">No Equations Saved!</h1>
+  <ion-list *ngFor="let e of savedEquations; let i = index">
     <ion-item-sliding>
     <ion-item (click)="loadEquation(e)">
-      {{e}}
+      <ion-label>{{e}}</ion-label>
     </ion-item>
     <ion-item-options side="end">
-      <ion-item-option color="danger" (click)="deleteItem(e)">
+      <ion-item-option color="danger" (click)="deleteItem(i)">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-item-option>
     </ion-item-options>
